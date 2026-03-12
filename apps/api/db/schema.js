@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real, sqliteEnum } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
 
 // Users table
@@ -15,7 +15,7 @@ export const friends = sqliteTable('friends', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id),
   friendId: integer('friend_id').notNull().references(() => users.id),
-  status: sqliteEnum('status', ['pending', 'accepted', 'blocked']).notNull().default('pending'),
+  status: text('status').notNull().default('pending'), // pending, accepted, blocked
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
