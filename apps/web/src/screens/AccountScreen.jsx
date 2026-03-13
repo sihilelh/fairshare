@@ -1,5 +1,7 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, SectionLabel, Avatar, Button } from '../components/UI.jsx'
+import { useAuth } from '../hooks/useAuth.jsx'
 import { CATEGORY_META } from '../data/mockData.js'
 
 const MENU = [
@@ -7,12 +9,16 @@ const MENU = [
   { icon:'🔔', label:'Notifications',         section:'Preferences' },
   { icon:'🔒', label:'Security',             section:'Preferences' },
   { icon:'🎨', label:'Appearance',           section:'Preferences' },
-  { icon:'⭐', label:'Rate UniSplit',         section:'Feedback' },
+  { icon:'⭐', label:'Rate SplitGather',         section:'Feedback' },
   { icon:'💬', label:'Send Feedback',        section:'Feedback' },
   { icon:'❓', label:'Help & Support',       section:'Feedback' },
 ]
 
 export default function AccountScreen({ currentUser, friends, expenses }) {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const displayUser = user || currentUser
   const totalSpent   = expenses.reduce((s,e)=>s+e.amount, 0)
   const youPaidCount = expenses.filter(e=>e.paidBy==='u1').length
 
@@ -62,9 +68,11 @@ export default function AccountScreen({ currentUser, friends, expenses }) {
             </div>
             <div style={{ flex:1 }}>
               <div style={{ fontSize:20, fontWeight:800, color:'var(--text)', letterSpacing:'-0.02em' }}>
-                {currentUser.name}
+                {displayUser?.name || currentUser.name}
               </div>
-              <div style={{ fontSize:13, color:'var(--text2)', marginTop:2 }}>{currentUser.email}</div>
+              <div style={{ fontSize:13, color:'var(--text2)', marginTop:2 }}>
+                {displayUser?.email || currentUser.email}
+              </div>
             </div>
             <button style={{
               background:'rgba(255,255,255,0.60)',
@@ -154,11 +162,19 @@ export default function AccountScreen({ currentUser, friends, expenses }) {
         ))}
 
         <div style={{ marginTop:8, marginBottom:20 }}>
-          <Button variant="danger">Log Out</Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              logout()
+              navigate('/login', { replace: true })
+            }}
+          >
+            Log Out
+          </Button>
         </div>
 
         <div style={{ textAlign:'center', paddingBottom:20, color:'var(--text3)', fontSize:12, fontWeight:500 }}>
-          UniSplit v1.0 · Made for uni students 🎓
+          SplitGather v1.0 · Made for uni students 🎓
         </div>
       </div>
     </div>

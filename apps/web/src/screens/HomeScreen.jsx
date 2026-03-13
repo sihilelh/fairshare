@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, SectionLabel, Avatar, BalanceBadge, CategoryIcon } from '../components/UI.jsx'
 import { CATEGORY_META } from '../data/mockData.js'
 
-export default function HomeScreen({ currentUser, friends, groups, expenses, totalOwed, totalOwe, netBalance, onAddExpense, onNavigate }) {
+export default function HomeScreen({ currentUser, friends, groups, expenses, totalOwed, totalOwe, netBalance, onAddExpense }) {
+  const navigate = useNavigate()
   const recent = [...expenses].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4)
   const getName = id => id==='u1'?'You':friends.find(f=>f.id===id)?.name||'?'
   const hour = new Date().getHours()
@@ -53,17 +55,17 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
           <div style={{ fontSize:46, fontWeight:800, color: netBalance>=0?'var(--accent)':'var(--negative)',
             letterSpacing:'-0.04em', lineHeight:1, marginBottom:14 }}>
             {netBalance>=0?'+':''}{Math.abs(netBalance).toFixed(2)}
-            <span style={{ fontSize:20 }}> USD</span>
+            <span style={{ fontSize:20 }}> LKR</span>
           </div>
           <div style={{ display:'flex', gap:20 }}>
             <div>
               <div style={{ fontSize:11, color:'var(--text3)', fontWeight:600, marginBottom:1 }}>Owed to you</div>
-              <div style={{ fontSize:16, fontWeight:800, color:'var(--positive)' }}>+Rs.{totalOwed.toFixed(2)}</div>
+              <div style={{ fontSize:16, fontWeight:800, color:'var(--positive)' }}>+LKR {totalOwed.toFixed(2)}</div>
             </div>
             <div style={{ width:1, background:'rgba(112,112,112,0.15)' }}/>
             <div>
               <div style={{ fontSize:11, color:'var(--text3)', fontWeight:600, marginBottom:1 }}>You owe</div>
-              <div style={{ fontSize:16, fontWeight:800, color:'var(--negative)' }}>-Rs.{totalOwe.toFixed(2)}</div>
+              <div style={{ fontSize:16, fontWeight:800, color:'var(--negative)' }}>-LKR {totalOwe.toFixed(2)}</div>
             </div>
           </div>
         </div>
@@ -88,7 +90,7 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
             <span style={{ fontSize:22 }}>＋</span>
             <span style={{ fontWeight:800, fontSize:14, color:'#0a0a0a' }}>Add Expense</span>
           </button>
-          <button onClick={()=>onNavigate('friends')} style={{
+          <button onClick={()=>navigate('/friends')} style={{
             background:'rgba(255,255,255,0.55)',
             backdropFilter:'blur(16px)',
             WebkitBackdropFilter:'blur(16px)',
@@ -114,7 +116,7 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
             <SectionLabel>Owe You 💚</SectionLabel>
             <div style={{ display:'flex', gap:10, overflowX:'auto', paddingBottom:4 }}>
               {friends.filter(f=>f.balance>0).map(f=>(
-                <div key={f.id} onClick={()=>onNavigate('friends')} style={{
+                <div key={f.id} onClick={()=>navigate('/friends')} style={{
                   flexShrink:0, cursor:'pointer',
                   background:'rgba(255,255,255,0.52)',
                   backdropFilter:'blur(16px)',
@@ -132,7 +134,7 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
                 >
                   <Avatar initials={f.initials} color={f.color} size={38}/>
                   <div style={{ fontSize:12, fontWeight:700, color:'var(--text2)' }}>{f.name.split(' ')[0]}</div>
-                  <div style={{ fontSize:12, fontWeight:800, color:'var(--positive)' }}>+Rs.{f.balance.toFixed(2)}</div>
+                  <div style={{ fontSize:12, fontWeight:800, color:'var(--positive)' }}>+LKR {f.balance.toFixed(2)}</div>
                 </div>
               ))}
             </div>
@@ -143,12 +145,12 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
         <div className="a4">
           <SectionLabel>
             Groups
-            <button onClick={()=>onNavigate('groups')} style={{ background:'none', border:'none',
+            <button onClick={()=>navigate('/groups')} style={{ background:'none', border:'none',
               color:'var(--accent)', fontSize:13, cursor:'pointer',
               fontFamily:'var(--font-body)', fontWeight:700 }}>See all →</button>
           </SectionLabel>
           {groups.slice(0,2).map(g=>(
-            <Card key={g.id} onClick={()=>onNavigate('groups')}>
+            <Card key={g.id} onClick={()=>navigate('/groups')}>
               <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{
                   fontSize:26, width:46, height:46,
@@ -171,7 +173,7 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
         <div className="a5">
           <SectionLabel>
             Recent
-            <button onClick={()=>onNavigate('activity')} style={{ background:'none', border:'none',
+            <button onClick={()=>navigate('/activity')} style={{ background:'none', border:'none',
               color:'var(--accent)', fontSize:13, cursor:'pointer',
               fontFamily:'var(--font-body)', fontWeight:700 }}>See all →</button>
           </SectionLabel>
@@ -190,7 +192,7 @@ export default function HomeScreen({ currentUser, friends, groups, expenses, tot
                   <div style={{ textAlign:'right' }}>
                     <div style={{ fontWeight:800, fontSize:15,
                       color:youPaid?'var(--positive)':'var(--negative)' }}>
-                      {youPaid?`+Rs.${(e.amount-parseFloat(per)).toFixed(2)}`:`-Rs.${per}`}
+                      {youPaid?`+LKR ${(e.amount-parseFloat(per)).toFixed(2)}`:`-LKR ${per}`}
                     </div>
                     <div style={{ fontSize:11, color:'var(--text3)' }}>{youPaid?'lent':'owe'}</div>
                   </div>
